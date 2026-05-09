@@ -1414,11 +1414,12 @@ SHAKE EFFECT
 
       const music = document.getElementById("bgMusic");
 
-      const musicBtn = document.getElementById("musicToggle");
+      // sconst musicBtn = document.getElementById("musicToggle");
 
       let musicPlaying = false;
 
-      musicBtn.addEventListener("click", () => {
+      /*
+ musicBtn.addEventListener("click", () => {
         if (!musicPlaying) {
           music.play();
 
@@ -1433,6 +1434,7 @@ SHAKE EFFECT
           showWish("Music Paused 🌙");
         }
       });
+     */
 
       /* =========================
             FLOATING WISH
@@ -1687,7 +1689,10 @@ SHAKE EFFECT
             lastShakeTime = Date.now();
 
             flame.classList.add("shake");
+            const balloonAudio = document.getElementById("balloonAudio");
+            balloonAudio.currentTime = 0;
 
+            balloonAudio.play().catch(() => {});
             /* Blow after visible shake */
             setTimeout(() => {
               if (!candleBlown) {

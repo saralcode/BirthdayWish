@@ -27,6 +27,19 @@
         --pink: #ff4f9a;
         --purple: #8b5cf6;
         --blue: #60a5fa;
+        --accent-soft: #ff6cab;
+        --accent-light: #ffc1dd;
+        --body-bg:
+          radial-gradient(circle at top left, #ff4f9a22, transparent 25%),
+          radial-gradient(circle at bottom right, #8b5cf622, transparent 25%),
+          linear-gradient(135deg, #090312, #14051f, #1d0d36);
+        --intro-bg:
+          radial-gradient(circle at top left, #ff4f9a33, transparent 25%),
+          radial-gradient(circle at bottom right, #8b5cf633, transparent 25%),
+          linear-gradient(135deg, #090312, #14051f, #1d0d36);
+        --final-bg:
+          radial-gradient(circle, rgba(255, 79, 154, 0.12), transparent),
+          linear-gradient(135deg, #090312, #14051f, #1d0d36);
       }
 
       html {
@@ -42,10 +55,7 @@
 
         min-height: 100vh;
 
-        background:
-          radial-gradient(circle at top left, #ff4f9a22, transparent 25%),
-          radial-gradient(circle at bottom right, #8b5cf622, transparent 25%),
-          linear-gradient(135deg, #090312, #14051f, #1d0d36);
+        background: var(--body-bg);
       }
 
       .glass {
@@ -189,10 +199,7 @@
 
         overflow: hidden;
 
-        background:
-          radial-gradient(circle at top left, #ff4f9a33, transparent 25%),
-          radial-gradient(circle at bottom right, #8b5cf633, transparent 25%),
-          linear-gradient(135deg, #090312, #14051f, #1d0d36);
+        background: var(--intro-bg);
 
         transition: 1s ease;
       }
@@ -573,14 +580,14 @@ CANDLE
 
         bottom: 0;
 
-        background: #ff6cab;
+        background: var(--accent-soft);
       }
 
       .layer2 {
         width: 180px;
         height: 70px;
 
-        background: #ffc1dd;
+        background: var(--accent-light);
 
         bottom: 70px;
         left: 20px;
@@ -935,9 +942,7 @@ SHAKE EFFECT
 
         padding: 20px;
 
-        background:
-          radial-gradient(circle, rgba(255, 79, 154, 0.12), transparent),
-          linear-gradient(135deg, #090312, #14051f, #1d0d36);
+        background: var(--final-bg);
 
         opacity: 0;
 
@@ -1131,6 +1136,7 @@ SHAKE EFFECT
 
         position: relative;
       }
+
     </style>
   </head>
 
@@ -1378,34 +1384,421 @@ SHAKE EFFECT
       <button class="btn" id="closeFinal">Go Back ✨</button>
     </div>
     <script>
-      function encodeName(name) {
-        return btoa(name)
+      const WISH_QUERY_KEY = "wish";
+
+      const themePresets = {
+        midnight: {
+          pink: "#ff4f9a",
+          purple: "#8b5cf6",
+          blue: "#60a5fa",
+          accentSoft: "#ff6cab",
+          accentLight: "#ffc1dd",
+          bodyBg:
+            "radial-gradient(circle at top left, #ff4f9a22, transparent 25%), radial-gradient(circle at bottom right, #8b5cf622, transparent 25%), linear-gradient(135deg, #090312, #14051f, #1d0d36)",
+          introBg:
+            "radial-gradient(circle at top left, #ff4f9a33, transparent 25%), radial-gradient(circle at bottom right, #8b5cf633, transparent 25%), linear-gradient(135deg, #090312, #14051f, #1d0d36)",
+          finalBg:
+            "radial-gradient(circle, rgba(255, 79, 154, 0.12), transparent), linear-gradient(135deg, #090312, #14051f, #1d0d36)",
+        },
+        blush: {
+          pink: "#ff5fa2",
+          purple: "#f472b6",
+          blue: "#f9a8d4",
+          accentSoft: "#fb7185",
+          accentLight: "#fbcfe8",
+          bodyBg:
+            "radial-gradient(circle at top left, #ff5fa226, transparent 25%), radial-gradient(circle at bottom right, #f9a8d426, transparent 27%), linear-gradient(135deg, #180713, #2a0f22, #37152c)",
+          introBg:
+            "radial-gradient(circle at top left, #ff5fa238, transparent 25%), radial-gradient(circle at bottom right, #f9a8d436, transparent 27%), linear-gradient(135deg, #180713, #2a0f22, #37152c)",
+          finalBg:
+            "radial-gradient(circle, rgba(255, 95, 162, 0.14), transparent), linear-gradient(135deg, #180713, #2a0f22, #37152c)",
+        },
+        lavender: {
+          pink: "#d8b4fe",
+          purple: "#a78bfa",
+          blue: "#93c5fd",
+          accentSoft: "#c084fc",
+          accentLight: "#ddd6fe",
+          bodyBg:
+            "radial-gradient(circle at top left, #d8b4fe26, transparent 25%), radial-gradient(circle at bottom right, #93c5fd26, transparent 27%), linear-gradient(135deg, #10071c, #1d1235, #26184b)",
+          introBg:
+            "radial-gradient(circle at top left, #d8b4fe36, transparent 25%), radial-gradient(circle at bottom right, #93c5fd34, transparent 27%), linear-gradient(135deg, #10071c, #1d1235, #26184b)",
+          finalBg:
+            "radial-gradient(circle, rgba(216, 180, 254, 0.14), transparent), linear-gradient(135deg, #10071c, #1d1235, #26184b)",
+        },
+        rosegold: {
+          pink: "#fb7185",
+          purple: "#fbbf24",
+          blue: "#fde68a",
+          accentSoft: "#f59e0b",
+          accentLight: "#fed7aa",
+          bodyBg:
+            "radial-gradient(circle at top left, #fb718529, transparent 25%), radial-gradient(circle at bottom right, #fbbf2429, transparent 27%), linear-gradient(135deg, #19070d, #2b1215, #3a2312)",
+          introBg:
+            "radial-gradient(circle at top left, #fb71853a, transparent 25%), radial-gradient(circle at bottom right, #fbbf2436, transparent 27%), linear-gradient(135deg, #19070d, #2b1215, #3a2312)",
+          finalBg:
+            "radial-gradient(circle, rgba(251, 191, 36, 0.14), transparent), linear-gradient(135deg, #19070d, #2b1215, #3a2312)",
+        },
+        aurora: {
+          pink: "#22d3ee",
+          purple: "#34d399",
+          blue: "#a7f3d0",
+          accentSoft: "#2dd4bf",
+          accentLight: "#99f6e4",
+          bodyBg:
+            "radial-gradient(circle at top left, #22d3ee24, transparent 26%), radial-gradient(circle at bottom right, #34d39926, transparent 28%), linear-gradient(135deg, #031016, #05211f, #103326)",
+          introBg:
+            "radial-gradient(circle at top left, #22d3ee34, transparent 26%), radial-gradient(circle at bottom right, #34d39934, transparent 28%), linear-gradient(135deg, #031016, #05211f, #103326)",
+          finalBg:
+            "radial-gradient(circle, rgba(34, 211, 238, 0.13), transparent), linear-gradient(135deg, #031016, #05211f, #103326)",
+        },
+        sunset: {
+          pink: "#fb7185",
+          purple: "#f59e0b",
+          blue: "#fcd34d",
+          accentSoft: "#fb923c",
+          accentLight: "#fed7aa",
+          bodyBg:
+            "radial-gradient(circle at top left, #fb718526, transparent 25%), radial-gradient(circle at bottom right, #f59e0b2a, transparent 26%), linear-gradient(135deg, #190713, #2b1020, #3a1d10)",
+          introBg:
+            "radial-gradient(circle at top left, #fb71853a, transparent 25%), radial-gradient(circle at bottom right, #f59e0b36, transparent 26%), linear-gradient(135deg, #190713, #2b1020, #3a1d10)",
+          finalBg:
+            "radial-gradient(circle, rgba(245, 158, 11, 0.14), transparent), linear-gradient(135deg, #190713, #2b1020, #3a1d10)",
+        },
+        royal: {
+          pink: "#c084fc",
+          purple: "#6366f1",
+          blue: "#38bdf8",
+          accentSoft: "#818cf8",
+          accentLight: "#c4b5fd",
+          bodyBg:
+            "radial-gradient(circle at top left, #c084fc24, transparent 25%), radial-gradient(circle at bottom right, #38bdf824, transparent 26%), linear-gradient(135deg, #070617, #111238, #1f1747)",
+          introBg:
+            "radial-gradient(circle at top left, #c084fc36, transparent 25%), radial-gradient(circle at bottom right, #38bdf834, transparent 26%), linear-gradient(135deg, #070617, #111238, #1f1747)",
+          finalBg:
+            "radial-gradient(circle, rgba(192, 132, 252, 0.14), transparent), linear-gradient(135deg, #070617, #111238, #1f1747)",
+        },
+        ocean: {
+          pink: "#38bdf8",
+          purple: "#2563eb",
+          blue: "#67e8f9",
+          accentSoft: "#0ea5e9",
+          accentLight: "#bae6fd",
+          bodyBg:
+            "radial-gradient(circle at top left, #38bdf827, transparent 25%), radial-gradient(circle at bottom right, #2563eb29, transparent 27%), linear-gradient(135deg, #020817, #071b35, #082f49)",
+          introBg:
+            "radial-gradient(circle at top left, #38bdf838, transparent 25%), radial-gradient(circle at bottom right, #2563eb36, transparent 27%), linear-gradient(135deg, #020817, #071b35, #082f49)",
+          finalBg:
+            "radial-gradient(circle, rgba(56, 189, 248, 0.14), transparent), linear-gradient(135deg, #020817, #071b35, #082f49)",
+        },
+        forest: {
+          pink: "#34d399",
+          purple: "#16a34a",
+          blue: "#bef264",
+          accentSoft: "#22c55e",
+          accentLight: "#bbf7d0",
+          bodyBg:
+            "radial-gradient(circle at top left, #34d39926, transparent 25%), radial-gradient(circle at bottom right, #bef26424, transparent 27%), linear-gradient(135deg, #03130b, #082016, #12351d)",
+          introBg:
+            "radial-gradient(circle at top left, #34d39936, transparent 25%), radial-gradient(circle at bottom right, #bef26432, transparent 27%), linear-gradient(135deg, #03130b, #082016, #12351d)",
+          finalBg:
+            "radial-gradient(circle, rgba(52, 211, 153, 0.14), transparent), linear-gradient(135deg, #03130b, #082016, #12351d)",
+        },
+        ember: {
+          pink: "#f97316",
+          purple: "#dc2626",
+          blue: "#facc15",
+          accentSoft: "#ea580c",
+          accentLight: "#fed7aa",
+          bodyBg:
+            "radial-gradient(circle at top left, #f9731628, transparent 25%), radial-gradient(circle at bottom right, #dc262629, transparent 27%), linear-gradient(135deg, #170703, #2b0d06, #3b1c08)",
+          introBg:
+            "radial-gradient(circle at top left, #f9731638, transparent 25%), radial-gradient(circle at bottom right, #dc262636, transparent 27%), linear-gradient(135deg, #170703, #2b0d06, #3b1c08)",
+          finalBg:
+            "radial-gradient(circle, rgba(249, 115, 22, 0.14), transparent), linear-gradient(135deg, #170703, #2b0d06, #3b1c08)",
+        },
+      };
+
+      const defaultWishContent = {
+        name: "[By saral code]",
+        theme: "midnight",
+        themeConfig: themePresets.midnight,
+        birthdayDate: "2026-05-10",
+        countdownTitle: "Birthday Begins In",
+        introSteps: [
+          "The world may remember this day as Mother's Day and they should...",
+          "Perhaps, the world has missed another reason why this day is so special...💫",
+          "Because today also marks the birth of someone unforgettable ✨",
+        ],
+        introHighlight: "It's {name}'s Birthday 💙",
+        mainMessage:
+          "Some dates are remembered by history, some by celebrations, and some simply because they gave the world someone irreplaceable. 10th May is one of those dates.",
+        mainSmallLine: ". . . a very happy birthday {name} 💙",
+        gifts: [
+          "Wishing you joy that never fades✨",
+          "Never stop being your beautiful self 🌟",
+          "May happiness follow you everywhere ✨",
+        ],
+        letterTitle: "A Little Letter . . .",
+        letter:
+          "Some people become memories. Some become emotions. And some become beautiful chapters in someone's life. Thank you for being such a comforting presence in this universe. ✨",
+        finalText: "You deserve every beautiful thing this universe can offer 💙",
+        finalOverlay:
+          "May this year become the most magical chapter of your life ✨",
+        wishMadeMessage:
+          "May every dream you carry turn into something beautiful ✨\n\nMay your smile never fade and your life stay magical 💫\n\nToday belongs to you 💙",
+        floatingWishes: [
+          "Keep smiling always ✨",
+          "The universe shines brighter today 💫",
+          "May happiness always find you 🌸",
+        ],
+        bubbleWishes: [
+          "Happy Birthday 💙",
+          "Stay Magical ✨",
+          "Smile Always 💖",
+          "Dream Big 🌙",
+        ],
+      };
+
+      function encodeToUrl(value) {
+        const bytes = new TextEncoder().encode(value);
+        let binary = "";
+
+        bytes.forEach((byte) => {
+          binary += String.fromCharCode(byte);
+        });
+
+        return btoa(binary)
           .replace(/\+/g, "-")
           .replace(/\//g, "_")
           .replace(/=+$/, "");
       }
 
-      function decodeName(encoded) {
+      function decodeFromUrl(encoded) {
         let base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
 
-        // restore padding
         base64 = base64.padEnd(
           base64.length + ((4 - (base64.length % 4)) % 4),
           "=",
         );
 
-        return atob(base64);
+        const binary = atob(base64);
+        const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+
+        return new TextDecoder().decode(bytes);
       }
-      const getAllNames = document.querySelectorAll(".person-name");
-      if (getAllNames) {
+
+      function encodeName(name) {
+        return encodeToUrl(name);
+      }
+
+      function decodeName(encoded) {
+        return decodeFromUrl(encoded);
+      }
+
+      function escapeHTML(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function linesToHTML(value) {
+        return escapeHTML(value).replace(/\n/g, "<br />");
+      }
+
+      function applyNameTemplate(value, content) {
+        return String(value ?? "").replaceAll("{name}", content.name);
+      }
+
+      function normalizeWishContent(content) {
+        const normalized = { ...defaultWishContent, ...content };
+
+        if (normalized.theme !== "custom" && !themePresets[normalized.theme]) {
+          normalized.theme = defaultWishContent.theme;
+        }
+
+        const presetTheme = themePresets[normalized.theme] || themePresets.midnight;
+        normalized.themeConfig =
+          normalized.themeConfig &&
+          ["pink", "purple", "blue", "accentSoft", "accentLight", "bodyBg", "introBg", "finalBg"].every(
+            (key) => typeof normalized.themeConfig[key] === "string",
+          )
+            ? normalized.themeConfig
+            : presetTheme;
+
+        normalized.introSteps = Array.isArray(normalized.introSteps)
+          ? normalized.introSteps
+          : [normalized.intro1, normalized.intro2, normalized.intro3].filter(Boolean);
+
+        normalized.gifts = Array.isArray(normalized.gifts)
+          ? normalized.gifts
+          : [normalized.gift1, normalized.gift2, normalized.gift3].filter(Boolean);
+
+        normalized.floatingWishes = Array.isArray(normalized.floatingWishes)
+          ? normalized.floatingWishes
+          : defaultWishContent.floatingWishes;
+
+        normalized.bubbleWishes = Array.isArray(normalized.bubbleWishes)
+          ? normalized.bubbleWishes
+          : defaultWishContent.bubbleWishes;
+
+        return normalized;
+      }
+
+      function getWishContentFromUrl() {
         const windowUrl = new URL(window.location.href);
-        const personName = windowUrl.searchParams.get("name");
-        getAllNames.forEach((el) => {
-          el.innerHTML = personName
-            ? decodeName(personName)
-            : "[By saral code]";
-        });
+        const encodedWish = windowUrl.searchParams.get(WISH_QUERY_KEY);
+        const legacyName = windowUrl.searchParams.get("name");
+        let content = { ...defaultWishContent };
+
+        if (encodedWish) {
+          try {
+            content = {
+              ...content,
+              ...JSON.parse(decodeFromUrl(encodedWish)),
+            };
+          } catch (error) {
+            console.warn("Invalid wish payload", error);
+          }
+        } else if (legacyName) {
+          try {
+            content.name = decodeName(legacyName);
+          } catch (error) {
+            content.name = legacyName;
+          }
+        }
+
+        return normalizeWishContent(content);
       }
+
+      function applyWishContent(content) {
+        window.birthdayWishContent = content;
+        document.title = `Happy Birthday ${content.name}`;
+        applyTheme(content.themeConfig);
+
+        document.querySelectorAll(".person-name").forEach((el) => {
+          el.textContent = content.name;
+        });
+
+        const storyCard = document.querySelector(".story-card");
+        if (storyCard) {
+          const defaultButtons = ["But but but... ✨", "How ? 🤔", "Who's that? 💫"];
+          const storySteps = content.introSteps.map((step, index) => `
+            <div class="story-step ${index === 0 ? "active" : ""}">
+              <div class="story-text">
+                ${linesToHTML(applyNameTemplate(step, content))}
+              </div>
+
+              <button class="btn">
+                ${escapeHTML(defaultButtons[index] || "Next ✨")}
+              </button>
+            </div>
+          `);
+
+          storySteps.push(`
+            <div class="story-step ${content.introSteps.length ? "" : "active"}">
+              <div class="story-highlight">
+                ${linesToHTML(applyNameTemplate(content.introHighlight, content))}
+              </div>
+
+              <button class="btn" id="enterBtn">Open Your Surprise 🎁</button>
+            </div>
+          `);
+
+          storyCard.innerHTML = storySteps.join("");
+        }
+
+        const countdownTitle = document.querySelector("#mainContent section .title");
+        if (countdownTitle) {
+          countdownTitle.textContent = content.countdownTitle;
+        }
+
+        const message = document.querySelector(".message.glass");
+        if (message) {
+          message.innerHTML = `
+            ${linesToHTML(applyNameTemplate(content.mainMessage, content))}
+            <div style="font-size: 1.5rem">
+              ${linesToHTML(applyNameTemplate(content.mainSmallLine, content))}
+            </div>
+          `;
+        }
+
+        const giftGrid = document.querySelector(".gift-grid");
+        if (giftGrid) {
+          const icons = ["🎁", "🎀", "🧧", "✨", "💙", "🌟"];
+
+          giftGrid.innerHTML = content.gifts
+            .map(
+              (gift, index) => `
+                <div class="gift glass" onclick="openGift(this)">
+                  ${icons[index % icons.length]}
+                  <div class="gift-message">
+                    ${linesToHTML(applyNameTemplate(gift, content))}
+                  </div>
+                </div>
+              `,
+            )
+            .join("");
+        }
+
+        const letterTitle = document.querySelector(".letter")?.previousElementSibling;
+        if (letterTitle) {
+          letterTitle.textContent = content.letterTitle;
+        }
+
+        const letter = document.querySelector(".letter");
+        if (letter) {
+          letter.innerHTML = `
+            Hey, <span class="person-name">${escapeHTML(content.name)}</span>
+            <br /><br />
+            ${linesToHTML(applyNameTemplate(content.letter, content))}
+            <br />
+          `;
+        }
+
+        const finalText = document.querySelector(".final-text");
+        if (finalText) {
+          finalText.innerHTML = linesToHTML(applyNameTemplate(content.finalText, content));
+        }
+
+        const finalMessage = document.querySelector(".final-message");
+        if (finalMessage) {
+          finalMessage.innerHTML = `
+            Happy Birthday <span class="person-name">${escapeHTML(content.name)}</span> 💙
+            <br /><br />
+            ${linesToHTML(applyNameTemplate(content.finalOverlay, content))}
+          `;
+        }
+      }
+
+      function applyTheme(themeConfig) {
+        const theme = themeConfig || themePresets.midnight;
+        const root = document.documentElement;
+
+        root.style.setProperty("--pink", theme.pink);
+        root.style.setProperty("--purple", theme.purple);
+        root.style.setProperty("--blue", theme.blue);
+        root.style.setProperty("--accent-soft", theme.accentSoft);
+        root.style.setProperty("--accent-light", theme.accentLight);
+        root.style.setProperty("--body-bg", theme.bodyBg);
+        root.style.setProperty("--intro-bg", theme.introBg);
+        root.style.setProperty("--final-bg", theme.finalBg);
+      }
+
+      function buildWishUrl(content) {
+        const url = new URL(window.location.href);
+        url.search = "";
+        url.hash = "";
+        url.searchParams.set(WISH_QUERY_KEY, encodeToUrl(JSON.stringify(content)));
+
+        return url.toString();
+      }
+
+      const birthdayWishContent = getWishContentFromUrl();
+      applyWishContent(birthdayWishContent);
     </script>
     <script>
       /* =========================
@@ -1481,9 +1874,17 @@ SHAKE EFFECT
         "The universe shines brighter today 💫",
         "May happiness always find you 🌸",
       ];
+      const activeRandomWishes =
+        window.birthdayWishContent?.floatingWishes?.length
+          ? window.birthdayWishContent.floatingWishes
+          : randomWishes;
 
       setInterval(() => {
-        showWish(randomWishes[Math.floor(Math.random() * randomWishes.length)]);
+        showWish(
+          activeRandomWishes[
+            Math.floor(Math.random() * activeRandomWishes.length)
+          ],
+        );
       }, 6000);
 
       /* =========================
@@ -1531,7 +1932,10 @@ SHAKE EFFECT
             COUNTDOWN
             ========================= */
 
-      const target = new Date("May 10, 2026 00:00:00").getTime();
+      const targetDate =
+        window.birthdayWishContent?.birthdayDate || "2026-05-10";
+
+      const target = new Date(`${targetDate}T00:00:00`).getTime();
 
       setInterval(() => {
         const now = new Date().getTime();
@@ -1751,17 +2155,18 @@ SHAKE EFFECT
         const overlay = document.createElement("div");
 
         overlay.id = "wishOverlay";
+        const popupMessage =
+          window.birthdayWishContent?.wishMadeMessage ||
+          defaultWishContent.wishMadeMessage;
 
         overlay.innerHTML = `
                 <div class="wish-box glass">
                   <h2>Wish Made 💙</h2>
 
                   <p>
-                    May every dream you carry turn into something beautiful ✨
-                    <br><br>
-                    May your smile never fade and your life stay magical 💫
-                    <br><br>
-                    Today belongs to you 💙
+                    ${linesToHTML(
+                      applyNameTemplate(popupMessage, window.birthdayWishContent),
+                    )}
                   </p>
 
                   <button class="btn" id="closeWish">
@@ -1887,13 +2292,19 @@ SHAKE EFFECT
         "Smile Always 💖",
         "Dream Big 🌙",
       ];
+      const activeBubbleWishes = window.birthdayWishContent?.bubbleWishes?.length
+        ? window.birthdayWishContent.bubbleWishes
+        : wishes;
 
       setInterval(() => {
         const bubble = document.createElement("div");
 
         bubble.className = "bubble";
 
-        bubble.innerText = wishes[Math.floor(Math.random() * wishes.length)];
+        bubble.innerText =
+          activeBubbleWishes[
+            Math.floor(Math.random() * activeBubbleWishes.length)
+          ];
 
         const size = Math.random() * 60 + 70;
 

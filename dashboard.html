@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Wish Dashboard</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Sacramento&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --pink: #ff4f9a;
+        --purple: #8b5cf6;
+        --blue: #60a5fa;
+      }
+
+      body {
+        min-height: 100vh;
+        padding: 32px 18px 56px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        background:
+          radial-gradient(circle at top left, #60a5fa28, transparent 25%),
+          radial-gradient(circle at bottom right, #ff4f9a28, transparent 25%),
+          linear-gradient(135deg, #090312, #14051f, #1d0d36);
+      }
+
+      .glass {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.28);
+      }
+
+      .shell {
+        width: min(1120px, 100%);
+        margin: 0 auto;
+      }
+
+      .header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 24px;
+      }
+
+      .title {
+        font-family: "Sacramento", cursive;
+        font-size: clamp(2.4rem, 6vw, 4rem);
+        line-height: 1;
+      }
+
+      .subtitle {
+        margin-top: 10px;
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      .actions,
+      .row-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .actions {
+        justify-content: flex-end;
+      }
+
+      button,
+      .link-btn {
+        min-height: 42px;
+        border: 0;
+        border-radius: 999px;
+        padding: 0 17px;
+        color: white;
+        font: inherit;
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      button.primary {
+        background: linear-gradient(135deg, var(--pink), var(--purple));
+      }
+
+      button.danger {
+        background: rgba(255, 79, 154, 0.16);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .panel {
+        border-radius: 18px;
+        padding: 22px;
+      }
+
+      .panel.wide {
+        grid-column: 1 / -1;
+      }
+
+      .panel h2 {
+        margin-bottom: 16px;
+        font-size: 1.05rem;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .field {
+        display: grid;
+        gap: 7px;
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      label {
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 0.86rem;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 12px;
+        padding: 12px 13px;
+        color: white;
+        background: rgba(255, 255, 255, 0.08);
+        font: inherit;
+        outline: none;
+      }
+
+      select option {
+        color: #111827;
+      }
+
+      textarea {
+        min-height: 92px;
+        resize: vertical;
+      }
+
+      .list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .list-item {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: start;
+      }
+
+      .generated-url {
+        min-height: 116px;
+        word-break: break-all;
+      }
+
+      .note {
+        margin-top: 10px;
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 0.9rem;
+      }
+
+      .url-actions {
+        margin-top: 12px;
+      }
+
+      .custom-theme-panel {
+        display: none;
+        grid-column: 1 / -1;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .custom-theme-panel.show {
+        display: block;
+      }
+
+      .color-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      input[type="color"] {
+        height: 46px;
+        padding: 4px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 760px) {
+        .header,
+        .actions {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .grid,
+        .form-grid,
+        .color-grid,
+        .list-item {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="shell">
+      <div class="header">
+        <div>
+          <h1 class="title">Birthday Wish Dashboard</h1>
+          <p class="subtitle">
+            Create the wish content here, then share the generated birthday page URL.
+          </p>
+        </div>
+
+        <div class="actions">
+          <a class="link-btn" href="./index.html">Open Wish Page</a>
+          <button type="button" id="resetDashboard">Reset</button>
+          <button type="button" id="previewWish">Preview</button>
+          <button class="primary" type="button" id="copyWishUrl">Copy URL</button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <section class="panel glass">
+          <h2>Basics</h2>
+          <div class="form-grid">
+            <div class="field">
+              <label for="name">Person name</label>
+              <input id="name" data-field="name" />
+            </div>
+            <div class="field">
+              <label for="birthdayDate">Birthday date</label>
+              <input id="birthdayDate" type="date" data-field="birthdayDate" />
+            </div>
+            <div class="field full">
+              <label for="theme">Theme</label>
+              <select id="theme" data-field="theme">
+                <optgroup label="Soft / Feminine">
+                  <option value="midnight">Midnight Glow</option>
+                  <option value="blush">Blush Bloom</option>
+                  <option value="lavender">Lavender Dream</option>
+                  <option value="rosegold">Rose Gold</option>
+                </optgroup>
+                <optgroup label="Bold / Masculine">
+                  <option value="royal">Royal Sky</option>
+                  <option value="ocean">Ocean Night</option>
+                  <option value="forest">Forest Emerald</option>
+                  <option value="ember">Ember Gold</option>
+                </optgroup>
+                <optgroup label="Universal">
+                  <option value="aurora">Aurora Green</option>
+                  <option value="sunset">Sunset Rose</option>
+                  <option value="custom">Custom Theme</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="custom-theme-panel" id="customThemePanel">
+              <div class="color-grid">
+                <div class="field">
+                  <label for="customPrimary">Primary color</label>
+                  <input id="customPrimary" type="color" data-theme-color="pink" />
+                </div>
+                <div class="field">
+                  <label for="customSecondary">Secondary color</label>
+                  <input id="customSecondary" type="color" data-theme-color="purple" />
+                </div>
+                <div class="field">
+                  <label for="customAccent">Accent color</label>
+                  <input id="customAccent" type="color" data-theme-color="blue" />
+                </div>
+              </div>
+            </div>
+            <div class="field full">
+              <label for="countdownTitle">Countdown title</label>
+              <input id="countdownTitle" data-field="countdownTitle" />
+            </div>
+          </div>
+        </section>
+
+        <section class="panel glass">
+          <h2>Main Wish</h2>
+          <div class="form-grid">
+            <div class="field full">
+              <label for="mainMessage">Main message</label>
+              <textarea id="mainMessage" data-field="mainMessage"></textarea>
+            </div>
+            <div class="field full">
+              <label for="mainSmallLine">Small birthday line</label>
+              <input id="mainSmallLine" data-field="mainSmallLine" />
+            </div>
+            <div class="field full">
+              <label for="wishMadeMessage">Candle wish popup</label>
+              <textarea id="wishMadeMessage" data-field="wishMadeMessage"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel glass wide">
+          <h2>Intro Story Steps</h2>
+          <div class="list" id="introStepsList"></div>
+          <div class="row-actions">
+            <button type="button" data-add-list="introSteps">Add Intro Step</button>
+          </div>
+          <div class="field" style="margin-top: 14px">
+            <label for="introHighlight">Birthday reveal</label>
+            <input id="introHighlight" data-field="introHighlight" />
+          </div>
+        </section>
+
+        <section class="panel glass">
+          <h2>Gift Notes</h2>
+          <div class="list" id="giftsList"></div>
+          <div class="row-actions">
+            <button type="button" data-add-list="gifts">Add Gift Note</button>
+          </div>
+        </section>
+
+        <section class="panel glass">
+          <h2>Floating Wishes</h2>
+          <div class="list" id="floatingWishesList"></div>
+          <div class="row-actions">
+            <button type="button" data-add-list="floatingWishes">Add Floating Wish</button>
+          </div>
+        </section>
+
+        <section class="panel glass">
+          <h2>Bubble Wishes</h2>
+          <div class="list" id="bubbleWishesList"></div>
+          <div class="row-actions">
+            <button type="button" data-add-list="bubbleWishes">Add Bubble Wish</button>
+          </div>
+        </section>
+
+        <section class="panel glass">
+          <h2>Letter And Final</h2>
+          <div class="form-grid">
+            <div class="field full">
+              <label for="letterTitle">Letter title</label>
+              <input id="letterTitle" data-field="letterTitle" />
+            </div>
+            <div class="field full">
+              <label for="letter">Letter body</label>
+              <textarea id="letter" data-field="letter"></textarea>
+            </div>
+            <div class="field full">
+              <label for="finalText">Final page line</label>
+              <input id="finalText" data-field="finalText" />
+            </div>
+            <div class="field full">
+              <label for="finalOverlay">Final overlay message</label>
+              <textarea id="finalOverlay" data-field="finalOverlay"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel glass wide">
+          <h2>Generated Dynamic URL</h2>
+          <textarea class="generated-url" id="generatedUrl" readonly></textarea>
+          <div class="url-actions">
+            <button class="primary" type="button" id="copyWishUrlBottom">
+              Copy URL
+            </button>
+          </div>
+          <p class="note" id="status">
+            Use {name} anywhere in text fields to insert the person's name.
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const WISH_QUERY_KEY = "wish";
+      const draftKey = "birthdayWishDashboardDraft";
+
+      const themePresets = {
+        midnight: {
+          pink: "#ff4f9a",
+          purple: "#8b5cf6",
+          blue: "#60a5fa",
+          accentSoft: "#ff6cab",
+          accentLight: "#ffc1dd",
+          bodyBg:
+            "radial-gradient(circle at top left, #60a5fa28, transparent 25%), radial-gradient(circle at bottom right, #ff4f9a28, transparent 25%), linear-gradient(135deg, #090312, #14051f, #1d0d36)",
+          introBg:
+            "radial-gradient(circle at top left, #ff4f9a33, transparent 25%), radial-gradient(circle at bottom right, #8b5cf633, transparent 25%), linear-gradient(135deg, #090312, #14051f, #1d0d36)",
+          finalBg:
+            "radial-gradient(circle, rgba(255, 79, 154, 0.12), transparent), linear-gradient(135deg, #090312, #14051f, #1d0d36)",
+        },
+        blush: {
+          pink: "#ff5fa2",
+          purple: "#f472b6",
+          blue: "#f9a8d4",
+          accentSoft: "#fb7185",
+          accentLight: "#fbcfe8",
+          bodyBg:
+            "radial-gradient(circle at top left, #ff5fa226, transparent 25%), radial-gradient(circle at bottom right, #f9a8d426, transparent 27%), linear-gradient(135deg, #180713, #2a0f22, #37152c)",
+          introBg:
+            "radial-gradient(circle at top left, #ff5fa238, transparent 25%), radial-gradient(circle at bottom right, #f9a8d436, transparent 27%), linear-gradient(135deg, #180713, #2a0f22, #37152c)",
+          finalBg:
+            "radial-gradient(circle, rgba(255, 95, 162, 0.14), transparent), linear-gradient(135deg, #180713, #2a0f22, #37152c)",
+        },
+        lavender: {
+          pink: "#d8b4fe",
+          purple: "#a78bfa",
+          blue: "#93c5fd",
+          accentSoft: "#c084fc",
+          accentLight: "#ddd6fe",
+          bodyBg:
+            "radial-gradient(circle at top left, #d8b4fe26, transparent 25%), radial-gradient(circle at bottom right, #93c5fd26, transparent 27%), linear-gradient(135deg, #10071c, #1d1235, #26184b)",
+          introBg:
+            "radial-gradient(circle at top left, #d8b4fe36, transparent 25%), radial-gradient(circle at bottom right, #93c5fd34, transparent 27%), linear-gradient(135deg, #10071c, #1d1235, #26184b)",
+          finalBg:
+            "radial-gradient(circle, rgba(216, 180, 254, 0.14), transparent), linear-gradient(135deg, #10071c, #1d1235, #26184b)",
+        },
+        rosegold: {
+          pink: "#fb7185",
+          purple: "#fbbf24",
+          blue: "#fde68a",
+          accentSoft: "#f59e0b",
+          accentLight: "#fed7aa",
+          bodyBg:
+            "radial-gradient(circle at top left, #fb718529, transparent 25%), radial-gradient(circle at bottom right, #fbbf2429, transparent 27%), linear-gradient(135deg, #19070d, #2b1215, #3a2312)",
+          introBg:
+            "radial-gradient(circle at top left, #fb71853a, transparent 25%), radial-gradient(circle at bottom right, #fbbf2436, transparent 27%), linear-gradient(135deg, #19070d, #2b1215, #3a2312)",
+          finalBg:
+            "radial-gradient(circle, rgba(251, 191, 36, 0.14), transparent), linear-gradient(135deg, #19070d, #2b1215, #3a2312)",
+        },
+        aurora: {
+          pink: "#22d3ee",
+          purple: "#34d399",
+          blue: "#a7f3d0",
+          accentSoft: "#2dd4bf",
+          accentLight: "#99f6e4",
+          bodyBg:
+            "radial-gradient(circle at top left, #22d3ee28, transparent 26%), radial-gradient(circle at bottom right, #34d39928, transparent 28%), linear-gradient(135deg, #031016, #05211f, #103326)",
+          introBg:
+            "radial-gradient(circle at top left, #22d3ee34, transparent 26%), radial-gradient(circle at bottom right, #34d39934, transparent 28%), linear-gradient(135deg, #031016, #05211f, #103326)",
+          finalBg:
+            "radial-gradient(circle, rgba(34, 211, 238, 0.13), transparent), linear-gradient(135deg, #031016, #05211f, #103326)",
+        },
+        sunset: {
+          pink: "#fb7185",
+          purple: "#f59e0b",
+          blue: "#fcd34d",
+          accentSoft: "#fb923c",
+          accentLight: "#fed7aa",
+          bodyBg:
+            "radial-gradient(circle at top left, #fb71852c, transparent 25%), radial-gradient(circle at bottom right, #f59e0b2e, transparent 26%), linear-gradient(135deg, #190713, #2b1020, #3a1d10)",
+          introBg:
+            "radial-gradient(circle at top left, #fb71853a, transparent 25%), radial-gradient(circle at bottom right, #f59e0b36, transparent 26%), linear-gradient(135deg, #190713, #2b1020, #3a1d10)",
+          finalBg:
+            "radial-gradient(circle, rgba(245, 158, 11, 0.14), transparent), linear-gradient(135deg, #190713, #2b1020, #3a1d10)",
+        },
+        royal: {
+          pink: "#c084fc",
+          purple: "#6366f1",
+          blue: "#38bdf8",
+          accentSoft: "#818cf8",
+          accentLight: "#c4b5fd",
+          bodyBg:
+            "radial-gradient(circle at top left, #c084fc28, transparent 25%), radial-gradient(circle at bottom right, #38bdf828, transparent 26%), linear-gradient(135deg, #070617, #111238, #1f1747)",
+          introBg:
+            "radial-gradient(circle at top left, #c084fc36, transparent 25%), radial-gradient(circle at bottom right, #38bdf834, transparent 26%), linear-gradient(135deg, #070617, #111238, #1f1747)",
+          finalBg:
+            "radial-gradient(circle, rgba(192, 132, 252, 0.14), transparent), linear-gradient(135deg, #070617, #111238, #1f1747)",
+        },
+        ocean: {
+          pink: "#38bdf8",
+          purple: "#2563eb",
+          blue: "#67e8f9",
+          accentSoft: "#0ea5e9",
+          accentLight: "#bae6fd",
+          bodyBg:
+            "radial-gradient(circle at top left, #38bdf827, transparent 25%), radial-gradient(circle at bottom right, #2563eb29, transparent 27%), linear-gradient(135deg, #020817, #071b35, #082f49)",
+          introBg:
+            "radial-gradient(circle at top left, #38bdf838, transparent 25%), radial-gradient(circle at bottom right, #2563eb36, transparent 27%), linear-gradient(135deg, #020817, #071b35, #082f49)",
+          finalBg:
+            "radial-gradient(circle, rgba(56, 189, 248, 0.14), transparent), linear-gradient(135deg, #020817, #071b35, #082f49)",
+        },
+        forest: {
+          pink: "#34d399",
+          purple: "#16a34a",
+          blue: "#bef264",
+          accentSoft: "#22c55e",
+          accentLight: "#bbf7d0",
+          bodyBg:
+            "radial-gradient(circle at top left, #34d39926, transparent 25%), radial-gradient(circle at bottom right, #bef26424, transparent 27%), linear-gradient(135deg, #03130b, #082016, #12351d)",
+          introBg:
+            "radial-gradient(circle at top left, #34d39936, transparent 25%), radial-gradient(circle at bottom right, #bef26432, transparent 27%), linear-gradient(135deg, #03130b, #082016, #12351d)",
+          finalBg:
+            "radial-gradient(circle, rgba(52, 211, 153, 0.14), transparent), linear-gradient(135deg, #03130b, #082016, #12351d)",
+        },
+        ember: {
+          pink: "#f97316",
+          purple: "#dc2626",
+          blue: "#facc15",
+          accentSoft: "#ea580c",
+          accentLight: "#fed7aa",
+          bodyBg:
+            "radial-gradient(circle at top left, #f9731628, transparent 25%), radial-gradient(circle at bottom right, #dc262629, transparent 27%), linear-gradient(135deg, #170703, #2b0d06, #3b1c08)",
+          introBg:
+            "radial-gradient(circle at top left, #f9731638, transparent 25%), radial-gradient(circle at bottom right, #dc262636, transparent 27%), linear-gradient(135deg, #170703, #2b0d06, #3b1c08)",
+          finalBg:
+            "radial-gradient(circle, rgba(249, 115, 22, 0.14), transparent), linear-gradient(135deg, #170703, #2b0d06, #3b1c08)",
+        },
+      };
+
+      const defaultWishContent = {
+        name: "[By saral code]",
+        theme: "midnight",
+        themeConfig: themePresets.midnight,
+        birthdayDate: "2026-05-10",
+        countdownTitle: "Birthday Begins In",
+        introSteps: [
+          "The world may remember this day as Mother's Day and they should...",
+          "Perhaps, the world has missed another reason why this day is so special...💫",
+          "Because today also marks the birth of someone unforgettable ✨",
+        ],
+        introHighlight: "It's {name}'s Birthday 💙",
+        mainMessage:
+          "Some dates are remembered by history, some by celebrations, and some simply because they gave the world someone irreplaceable. 10th May is one of those dates.",
+        mainSmallLine: ". . . a very happy birthday {name} 💙",
+        gifts: [
+          "Wishing you joy that never fades✨",
+          "Never stop being your beautiful self 🌟",
+          "May happiness follow you everywhere ✨",
+        ],
+        letterTitle: "A Little Letter . . .",
+        letter:
+          "Some people become memories. Some become emotions. And some become beautiful chapters in someone's life. Thank you for being such a comforting presence in this universe. ✨",
+        finalText: "You deserve every beautiful thing this universe can offer 💙",
+        finalOverlay:
+          "May this year become the most magical chapter of your life ✨",
+        wishMadeMessage:
+          "May every dream you carry turn into something beautiful ✨\n\nMay your smile never fade and your life stay magical 💫\n\nToday belongs to you 💙",
+        floatingWishes: [
+          "Keep smiling always ✨",
+          "The universe shines brighter today 💫",
+          "May happiness always find you 🌸",
+        ],
+        bubbleWishes: [
+          "Happy Birthday 💙",
+          "Stay Magical ✨",
+          "Smile Always 💖",
+          "Dream Big 🌙",
+        ],
+      };
+
+      const listConfig = {
+        introSteps: {
+          elementId: "introStepsList",
+          label: "Intro step",
+          multiline: true,
+        },
+        gifts: {
+          elementId: "giftsList",
+          label: "Gift note",
+        },
+        floatingWishes: {
+          elementId: "floatingWishesList",
+          label: "Floating wish",
+        },
+        bubbleWishes: {
+          elementId: "bubbleWishesList",
+          label: "Bubble wish",
+        },
+      };
+
+      let currentContent = structuredClone(defaultWishContent);
+
+      function encodeToUrl(value) {
+        const bytes = new TextEncoder().encode(value);
+        let binary = "";
+
+        bytes.forEach((byte) => {
+          binary += String.fromCharCode(byte);
+        });
+
+        return btoa(binary)
+          .replace(/\+/g, "-")
+          .replace(/\//g, "_")
+          .replace(/=+$/, "");
+      }
+
+      function decodeFromUrl(encoded) {
+        let base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
+        base64 = base64.padEnd(
+          base64.length + ((4 - (base64.length % 4)) % 4),
+          "=",
+        );
+
+        const binary = atob(base64);
+        const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+
+        return new TextDecoder().decode(bytes);
+      }
+
+      function hexToRgba(hex, alpha) {
+        const cleanHex = String(hex || "#ff4f9a").replace("#", "");
+        const value = parseInt(cleanHex, 16);
+        const red = (value >> 16) & 255;
+        const green = (value >> 8) & 255;
+        const blue = value & 255;
+
+        return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+      }
+
+      function buildCustomTheme(colors) {
+        const pink = colors?.pink || "#ff4f9a";
+        const purple = colors?.purple || "#8b5cf6";
+        const blue = colors?.blue || "#60a5fa";
+
+        return {
+          pink,
+          purple,
+          blue,
+          accentSoft: pink,
+          accentLight: blue,
+          bodyBg: `radial-gradient(circle at top left, ${hexToRgba(pink, 0.16)}, transparent 25%), radial-gradient(circle at bottom right, ${hexToRgba(purple, 0.16)}, transparent 27%), linear-gradient(135deg, #090312, #14051f, #1d0d36)`,
+          introBg: `radial-gradient(circle at top left, ${hexToRgba(pink, 0.22)}, transparent 25%), radial-gradient(circle at bottom right, ${hexToRgba(purple, 0.22)}, transparent 27%), linear-gradient(135deg, #090312, #14051f, #1d0d36)`,
+          finalBg: `radial-gradient(circle, ${hexToRgba(blue, 0.14)}, transparent), linear-gradient(135deg, #090312, #14051f, #1d0d36)`,
+        };
+      }
+
+      function normalizeContent(content) {
+        const normalized = { ...defaultWishContent, ...content };
+
+        if (normalized.theme !== "custom" && !themePresets[normalized.theme]) {
+          normalized.theme = defaultWishContent.theme;
+        }
+
+        normalized.themeConfig =
+          normalized.theme === "custom"
+            ? buildCustomTheme(normalized.themeConfig)
+            : themePresets[normalized.theme];
+
+        normalized.introSteps = Array.isArray(normalized.introSteps)
+          ? normalized.introSteps
+          : [normalized.intro1, normalized.intro2, normalized.intro3].filter(Boolean);
+
+        normalized.gifts = Array.isArray(normalized.gifts)
+          ? normalized.gifts
+          : [normalized.gift1, normalized.gift2, normalized.gift3].filter(Boolean);
+
+        normalized.floatingWishes = Array.isArray(normalized.floatingWishes)
+          ? normalized.floatingWishes
+          : defaultWishContent.floatingWishes;
+
+        normalized.bubbleWishes = Array.isArray(normalized.bubbleWishes)
+          ? normalized.bubbleWishes
+          : defaultWishContent.bubbleWishes;
+
+        return normalized;
+      }
+
+      function getInitialContent() {
+        const params = new URL(window.location.href).searchParams;
+        const encodedWish = params.get(WISH_QUERY_KEY);
+
+        if (encodedWish) {
+          try {
+            return normalizeContent(JSON.parse(decodeFromUrl(encodedWish)));
+          } catch (error) {
+            console.warn("Invalid wish payload", error);
+          }
+        }
+
+        const draft = localStorage.getItem(draftKey);
+
+        if (draft) {
+          try {
+            return normalizeContent(JSON.parse(draft));
+          } catch (error) {
+            console.warn("Invalid saved dashboard draft", error);
+          }
+        }
+
+        return structuredClone(defaultWishContent);
+      }
+
+      function renderList(key) {
+        const config = listConfig[key];
+        const list = document.getElementById(config.elementId);
+        const values = currentContent[key];
+
+        list.innerHTML = values
+          .map((value, index) => {
+            const fieldId = `${key}-${index}`;
+            const input = config.multiline
+              ? `<textarea id="${fieldId}" data-list="${key}" data-index="${index}">${escapeHtml(value)}</textarea>`
+              : `<input id="${fieldId}" data-list="${key}" data-index="${index}" value="${escapeHtml(value)}" />`;
+
+            return `
+              <div class="list-item">
+                <div class="field">
+                  <label for="${fieldId}">${config.label} ${index + 1}</label>
+                  ${input}
+                </div>
+                <button class="danger" type="button" data-remove-list="${key}" data-index="${index}">
+                  Remove
+                </button>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      function renderAllLists() {
+        Object.keys(listConfig).forEach(renderList);
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function populateForm() {
+        document.querySelectorAll("[data-field]").forEach((field) => {
+          field.value = currentContent[field.dataset.field] ?? "";
+        });
+
+        document.querySelectorAll("[data-theme-color]").forEach((field) => {
+          field.value =
+            currentContent.themeConfig?.[field.dataset.themeColor] ||
+            themePresets.midnight[field.dataset.themeColor];
+        });
+
+        renderAllLists();
+        applyDashboardTheme(currentContent.themeConfig);
+        toggleCustomThemePanel();
+        updateGeneratedUrl();
+      }
+
+      function readForm() {
+        document.querySelectorAll("[data-field]").forEach((field) => {
+          currentContent[field.dataset.field] = field.value.trim();
+        });
+
+        if (currentContent.theme === "custom") {
+          currentContent.themeConfig = {};
+
+          document.querySelectorAll("[data-theme-color]").forEach((field) => {
+            currentContent.themeConfig[field.dataset.themeColor] = field.value;
+          });
+        }
+
+        document.querySelectorAll("[data-list]").forEach((field) => {
+          const key = field.dataset.list;
+          const index = Number(field.dataset.index);
+
+          currentContent[key][index] = field.value.trim();
+        });
+
+        Object.keys(listConfig).forEach((key) => {
+          currentContent[key] = currentContent[key].filter(Boolean);
+        });
+
+        currentContent = normalizeContent(currentContent);
+        applyDashboardTheme(currentContent.themeConfig);
+
+        return currentContent;
+      }
+
+      function toggleCustomThemePanel() {
+        const panel = document.getElementById("customThemePanel");
+        panel.classList.toggle(
+          "show",
+          document.getElementById("theme").value === "custom",
+        );
+      }
+
+      function applyDashboardTheme(themeConfig) {
+        const theme = themeConfig || themePresets.midnight;
+        const root = document.documentElement;
+
+        root.style.setProperty("--pink", theme.pink);
+        root.style.setProperty("--purple", theme.purple);
+        root.style.setProperty("--blue", theme.blue);
+        document.body.style.background = theme.bodyBg;
+      }
+
+      function buildWishUrl(content) {
+        const url = new URL("index.html", window.location.href);
+        url.search = "";
+        url.hash = "";
+        url.searchParams.set(WISH_QUERY_KEY, encodeToUrl(JSON.stringify(content)));
+
+        return url.toString();
+      }
+
+      function updateGeneratedUrl() {
+        const content = readForm();
+        const url = buildWishUrl(content);
+
+        document.getElementById("generatedUrl").value = url;
+        localStorage.setItem(draftKey, JSON.stringify(content));
+
+        return url;
+      }
+
+      function setStatus(message) {
+        document.getElementById("status").textContent = message;
+      }
+
+      document.addEventListener("input", (event) => {
+        if (event.target.matches("[data-field], [data-list], [data-theme-color]")) {
+          updateGeneratedUrl();
+        }
+      });
+
+      document.getElementById("theme").addEventListener("change", () => {
+        toggleCustomThemePanel();
+
+        if (document.getElementById("theme").value !== "custom") {
+          currentContent.themeConfig =
+            themePresets[document.getElementById("theme").value];
+        }
+
+        updateGeneratedUrl();
+      });
+
+      document.addEventListener("click", (event) => {
+        const addKey = event.target.dataset.addList;
+        const removeKey = event.target.dataset.removeList;
+
+        if (addKey) {
+          currentContent = readForm();
+          currentContent[addKey].push("");
+          renderList(addKey);
+          updateGeneratedUrl();
+        }
+
+        if (removeKey) {
+          currentContent = readForm();
+          currentContent[removeKey].splice(Number(event.target.dataset.index), 1);
+          renderList(removeKey);
+          updateGeneratedUrl();
+        }
+      });
+
+      document.getElementById("resetDashboard").addEventListener("click", () => {
+        currentContent = structuredClone(defaultWishContent);
+        localStorage.removeItem(draftKey);
+        populateForm();
+        setStatus("Dashboard reset to default content.");
+      });
+
+      document.getElementById("previewWish").addEventListener("click", () => {
+        window.open(updateGeneratedUrl(), "_blank");
+      });
+
+      async function copyGeneratedUrl() {
+        const url = updateGeneratedUrl();
+
+        try {
+          await navigator.clipboard.writeText(url);
+          setStatus("Dynamic URL copied to clipboard.");
+        } catch (error) {
+          document.getElementById("generatedUrl").select();
+          setStatus("Copy blocked by the browser. Select the URL above manually.");
+        }
+      }
+
+      document.getElementById("copyWishUrl").addEventListener("click", copyGeneratedUrl);
+      document
+        .getElementById("copyWishUrlBottom")
+        .addEventListener("click", copyGeneratedUrl);
+
+      currentContent = getInitialContent();
+      populateForm();
+    </script>
+  </body>
+</html>

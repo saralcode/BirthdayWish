@@ -1227,7 +1227,7 @@ SHAKE EFFECT
       <div class="story-card glass">
         <div class="story-step active">
           <div class="story-text">
-            The world may remember this day as Mother's Day and they should...
+            Some moments deserve more than a simple message...
           </div>
 
           <button class="btn">But but but... ✨</button>
@@ -1235,8 +1235,8 @@ SHAKE EFFECT
 
         <div class="story-step">
           <div class="story-text">
-            Perhaps, the world has missed another reason why this day is so
-            special...💫
+            So this little page was made to hold a few warm words just for you
+            💫
           </div>
 
           <button class="btn">How ? 🤔</button>
@@ -1244,7 +1244,7 @@ SHAKE EFFECT
 
         <div class="story-step">
           <div class="story-text">
-            Because today also marks the birth of someone unforgettable ✨
+            Because today is about celebrating something meaningful ✨
           </div>
 
           <button class="btn">Who's that? 💫</button>
@@ -1297,8 +1297,7 @@ SHAKE EFFECT
 
         <div class="message glass">
           Some dates are remembered by history, some by celebrations, and some
-          simply because they gave the world someone irreplaceable. 10th May is
-          one of those dates.
+          simply because they gave the world someone irreplaceable.
           <div style="font-size: 1.5rem">
             . . . sending this special wish to
             <span class="person-name">[NAME]</span> 💙
@@ -1414,7 +1413,7 @@ SHAKE EFFECT
             Make a custom page for someone you care about, personalize the
             words, choose a theme, and share it as a private link.
           </p>
-          <a class="btn" id="createWishLink" href="../">
+          <a class="btn" id="createWishLink" href="/" target="_blank">
             Create Your Own Wish ✨
           </a>
         </div>
@@ -1878,21 +1877,22 @@ SHAKE EFFECT
 
       const birthdayWishContent = getWishContentFromUrl();
       applyWishContent(birthdayWishContent);
-
+      /*
       const createWishLink = document.getElementById("createWishLink");
       if (createWishLink) {
         const dashboardUrl = new URL(window.location.href);
         const currentWish = new URL(window.location.href).searchParams.get(
           WISH_QUERY_KEY,
         );
-        /*
+        
         if (currentWish) {
           dashboardUrl.searchParams.set(WISH_QUERY_KEY, currentWish);
         }
-          */
+          
 
         createWishLink.href = dashboardUrl.toString();
       }
+        */
     </script>
     <script>
       /* =========================

@@ -391,19 +391,26 @@
           </button>
         </div>
       </div>
-
+      <p style="text-align: center; padding: 10px">
+        <i>To see preview use current date and time.</i>
+      </p>
       <div class="grid">
         <section class="panel glass">
           <h2>Basics</h2>
           <div class="form-grid">
-            <div class="field">
+            <div class="field full">
               <label for="name">Person name</label>
               <input id="name" data-field="name" />
             </div>
-            <div class="field">
+            <div class="field full">
               <label for="birthdayDate">Wish date</label>
-              <input id="birthdayDate" type="date" data-field="birthdayDate" />
+              <input
+                id="birthdayDate"
+                type="datetime-local"
+                data-field="birthdayDate"
+              />
             </div>
+
             <div class="field full">
               <label for="theme">Theme</label>
               <select id="theme" data-field="theme">
@@ -844,11 +851,26 @@
         },
       };
 
+      const now = new Date();
+
+      // Format to YYYY-MM-DDTHH:MM
+      const formatted =
+        now.getFullYear() +
+        "-" +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(now.getDate()).padStart(2, "0") +
+        "T" +
+        String(now.getHours()).padStart(2, "0") +
+        ":" +
+        String(now.getMinutes()).padStart(2, "0");
+
       const defaultWishContent = {
         name: "Someone Special",
         theme: "midnight",
+
         themeConfig: themePresets.midnight,
-        birthdayDate: "2026-05-10",
+        birthdayDate: formatted,
         countdownTitle: "Special Moment Begins In",
         introSteps: [
           "Some moments deserve more than a simple message...",
